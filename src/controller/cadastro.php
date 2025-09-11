@@ -5,7 +5,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
     $nome      = $connection->real_escape_string($_POST['nome']);
     $sobrenome = $connection->real_escape_string($_POST['sobrenome']);
     $email     = $connection->real_escape_string($_POST['email']);
-    $senha     = password_hash($_POST['senha'], PASSWORD_DEFAULT);
+    $senha = $_POST['senha'];
+    $hashSenha = password_hash($senha, PASSWORD_DEFAULT);
 
     $stmt_check = $connection->prepare("SELECT email FROM usuarios WHERE email = ?");
     $stmt_check->bind_param("s", $email);
@@ -19,9 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
         exit();
     } else {
         $stmt_insert = $connection->prepare("INSERT INTO usuarios (nome, sobrenome, email, senha) VALUES (?, ?, ?, ?)");
-        $stmt_insert->bind_param("ssss", $nome, $sobrenome, $email, $senha);
+        $stmt_insert->bind_param("ssss", $nome, $sobrenome, $email, $hashSenha);
 
         if ($stmt_insert->execute()) {
+            header("location:../views/html/index.html");
             echo "<script>alert('Usuário cadastrado com sucesso!');</script>";
         } else {
         }
