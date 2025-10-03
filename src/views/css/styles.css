@@ -1881,3 +1881,25 @@ html {
         padding: 1rem;
     }
 }
+
+.btn-logout {
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #e74c3c;
+    border: 2px solid #e74c3c;
+    border-radius: 8px;
+    background: transparent;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.btn-logout i {
+    margin-right: 8px;
+}
+
+.btn-logout:hover {
+    background: #e74c3c;
+    color: #fff;
+}

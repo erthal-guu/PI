@@ -1,10 +1,33 @@
+<?php
+session_start();
+$isLoggedIn = isset($_SESSION['id']);
+$userName = '';
+
+if ($isLoggedIn) {
+    include("../controller/conexao.php");
+    $userId = $_SESSION['id'];
+    
+    $stmt = $connection->prepare("SELECT nome FROM usuarios WHERE id = ?");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        $userName = $user['nome'];
+    }
+    
+    $stmt->close();
+    $connection->close();
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consulta IA - Self Med</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -22,19 +45,63 @@
                 </div>
             </div>
             <nav class="nav-menu">
-                <a href="index.html" class="nav-link">
+                <a href="index.php" class="nav-link">
                     <i class="fas fa-home"></i>
                     <span>Início</span>
                 </a>
-                <a href="consulta.html" class="nav-link active">
+                <a href="consulta.php" class="nav-link active">
                     <i class="fas fa-stethoscope"></i>
                     <span>Consulta</span>
                 </a>
-                <a href="index.html#about" class="nav-link">
+                <a href="index.php #about" class="nav-link">
                     <i class="fas fa-info-circle"></i>
                     <span>Sobre</span>
                 </a>
             </nav>
+
+            <div class="auth-section">
+                <?php if (!$isLoggedIn): ?>
+                <div class="auth-buttons" id="auth-buttons">
+                    <button class="btn-login" onclick="window.location.href='index.php'">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Entrar</span>
+                    </button>
+                    <button class="btn-register" onclick="window.location.href='index.php'">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Cadastrar</span>
+                    </button>
+                </div>
+                <?php else: ?>
+                <div class="user-profile" id="user-profile">
+                    <div class="profile-dropdown">
+                        <button class="profile-btn" onclick="toggleProfileMenu()">
+                            <div class="profile-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span class="profile-name" id="profile-name"><?php echo htmlspecialchars($userName); ?></span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+
+                        <div class="profile-menu" id="profile-menu">
+                            <a href="perfil.php" class="profile-menu-item">
+                                <i class="fas fa-user-circle"></i>
+                                Meu Perfil
+                            </a>
+                            <a href="historico.html" class="profile-menu-item">
+                                <i class="fas fa-history"></i>
+                                Histórico
+                            </a>
+                            <div class="profile-menu-divider"></div>
+                            <button class="profile-menu-item logout-btn" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Sair
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+
             <div class="mobile-menu-toggle">
                 <i class="fas fa-bars"></i>
             </div>
@@ -192,10 +259,10 @@
                 <div class="footer-section">
                     <h4>Navegação</h4>
                     <ul class="footer-links">
-                        <li><a href="index.html">Início</a></li>
-                        <li><a href="consulta.html">Consulta IA</a></li>
-                        <li><a href="index.html#about">Sobre Nós</a></li>
-                        <li><a href="index.html#how-it-works">Como Funciona</a></li>
+                        <li><a href="index.php">Início</a></li>
+                        <li><a href="consulta.php">Consulta IA</a></li>
+                        <li><a href="index.php #about">Sobre Nós</a></li>
+                        <li><a href="index.php#how-it-works">Como Funciona</a></li>
                     </ul>
                 </div>
                 
@@ -220,14 +287,14 @@
             
             <div class="footer-bottom">
                 <div class="footer-bottom-content">
-                    <p>&copy; 2024 Self Med. Todos os direitos reservados.</p>
+                    <p>&copy; 2025 Self Med. Todos os direitos reservados.</p>
                     <p>Desenvolvido com <i class="fas fa-heart"></i> para cuidar da sua saúde</p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <script src="consulta.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/consulta.js"></script>
 </body>
 </html>
-    
