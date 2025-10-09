@@ -110,7 +110,6 @@ if ($isLoggedIn) {
         </div>
     </header>
     
-    <!-- Login Modal -->
     <div class="modal" id="loginModal">
         <div class="modal-content">
             <div class="modal-header">

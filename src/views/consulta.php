@@ -2,11 +2,12 @@
 session_start();
 $isLoggedIn = isset($_SESSION['id']);
 $userName = '';
+$mensagem = '';
 
 if ($isLoggedIn) {
     include("../controller/conexao.php");
     $userId = $_SESSION['id'];
-    
+
     $stmt = $connection->prepare("SELECT nome FROM usuarios WHERE id = ?");
     $stmt->bind_param("i", $userId);
     $stmt->execute();
@@ -16,11 +17,33 @@ if ($isLoggedIn) {
         $user = $result->fetch_assoc();
         $userName = $user['nome'];
     }
-    
     $stmt->close();
+    
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $sintomas = $_POST['sintomas'] ?? '';
+        $duracao = $_POST['duracao-sintomas'] ?? '';
+        $intensidade = $_POST['intensidade'] ?? '';
+
+        if (!empty($sintomas) && !empty($duracao) && !empty($intensidade)) {
+            $stmt_insert = $connection->prepare("INSERT INTO consultas (id_usuario, sintomas, duracao_sintomas, intensidade) VALUES (?, ?, ?, ?)");
+            $stmt_insert->bind_param("issi", $userId, $sintomas, $duracao, $intensidade);
+            
+            if ($stmt_insert->execute()) {
+                $mensagem = "<p style='color: green; text-align:center;'>✅ Consulta registrada com sucesso!</p> ";
+            } else {
+                $mensagem = "<p style='color: red; text-align:center;'>❌ Erro ao salvar a consulta.</p>";
+            }
+
+            $stmt_insert->close();
+        } else {
+            $mensagem = "<p style='color: orange; text-align:center;'>⚠️ Preencha todos os campos antes de enviar.</p>";
+        }
+    }
+
     $connection->close();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -79,7 +102,7 @@ if ($isLoggedIn) {
                                 <i class="fas fa-user"></i>
                             </div>
                             <span class="profile-name" id="profile-name"><?php echo htmlspecialchars($userName); ?></span>
-                            <i class="fas fa-chevron-down"></i>
+                            <a href="perfilView.php"><i class="fas fa-chevron-down" class="fas fa-chevron-down"></i></a>
                         </button>
 
                         <div class="profile-menu" id="profile-menu">
@@ -107,11 +130,8 @@ if ($isLoggedIn) {
             </div>
         </div>
     </header>
-
-    <!-- Consultation Page -->
     <main class="consultation-page">
         <div class="container">
-            <!-- Page Header -->
             <div class="page-header">
                 <h1>Consulta com IA</h1>
                 <p>Descreva seus sintomas e receba orientações iniciais personalizadas</p>
@@ -127,8 +147,6 @@ if ($isLoggedIn) {
                     <p>Esta ferramenta oferece <strong>orientações iniciais</strong> baseadas em inteligência artificial. <strong>NÃO substitui</strong> consulta médica profissional, diagnóstico ou tratamento. Em emergências, procure atendimento médico imediatamente.</p>
                 </div>
             </div>
-
-            <!-- Consultation Form -->
             <div class="consultation-container">
                 <div class="consultation-card">
                     <div class="card-header">
@@ -136,16 +154,11 @@ if ($isLoggedIn) {
                         <p>Conte-nos como você está se sentindo</p>
                     </div>
 
-                    <form id="consultation-form" class="consultation-form">
+                    <form id="consultation-form" class="consultation-form" method="post">
                         <div class="form-group">
                             <label for="symptoms">Descreva seus sintomas:</label>
                             <textarea 
-                                id="symptoms" 
-                                name="symptoms"
-                                placeholder="Ex: Estou sentindo dor de cabeça há 2 dias, acompanhada de um pouco de febre e cansaço. A dor é mais intensa pela manhã..."
-                                rows="6"
-                                required
-                            ></textarea>
+                                id="symptoms" name="sintomas"rows="6"required></textarea>
                             <div class="char-counter">
                                 <span id="char-count">0</span>/1000 caracteres
                             </div>
@@ -153,7 +166,7 @@ if ($isLoggedIn) {
 
                         <div class="form-group">
                             <label for="duration">Há quanto tempo você tem esses sintomas?</label>
-                            <select id="duration" name="duration" required>
+                            <select id="duration" name="duracao-sintomas" required>
                                 <option value="">Selecione...</option>
                                 <option value="menos-24h">Menos de 24 horas</option>
                                 <option value="1-3-dias">1 a 3 dias</option>
@@ -166,7 +179,7 @@ if ($isLoggedIn) {
                         <div class="form-group">
                             <label for="intensity">Intensidade dos sintomas:</label>
                             <div class="intensity-scale">
-                                <input type="range" id="intensity" name="intensity" min="1" max="10" value="5">
+                                <input type="range" id="intensity" name="intensidade" min="1" max="10" value="5">
                                 <div class="scale-labels">
                                     <span>Leve (1)</span>
                                     <span id="intensity-value">5</span>
@@ -183,14 +196,11 @@ if ($isLoggedIn) {
                             </div>
                         </button>
                     </form>
-
-                    <!-- Results Area -->
                     <div id="results-section" class="results-section" style="display: none;">
                         <div class="results-header">
                             <h3><i class="fas fa-clipboard-list"></i> Análise Recebida</h3>
                         </div>
                         <div id="analysis-results" class="analysis-results">
-                            <!-- Results will be populated here -->
                         </div>
                         <div class="results-actions">
                             <button type="button" class="btn-secondary" onclick="startNewConsultation()">
@@ -200,8 +210,6 @@ if ($isLoggedIn) {
                         </div>
                     </div>
                 </div>
-
-                <!-- Side Information -->
                 <div class="side-info">
                     <div class="info-card">
                         <h3><i class="fas fa-lightbulb"></i> Dicas para uma melhor análise</h3>

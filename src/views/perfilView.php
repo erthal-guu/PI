@@ -77,8 +77,7 @@ include("../controller/perfil.php");
                     </div>
                     <div class="profile-nav">
                         <a href="#personal-info" class="profile-nav-item active" data-tab="personal-info"><i class="fas fa-user"></i>Informações Pessoais</a>
-                        <a href="#security" class="profile-nav-item" data-tab="security"><i class="fas fa-shield-alt"></i>Segurança</a>
-                        <a href="#preferences" class="profile-nav-item" data-tab="preferences"><i class="fas fa-cog"></i>Preferências</a>
+                        <a href="historico.php" class="profile-nav-item" data-tab="security"><i class="fas fa-shield-alt"></i>Histórico</a>
                     </div>
                 </div>
                 <div class="profile-content">

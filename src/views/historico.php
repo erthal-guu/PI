@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Histórico de Consultas - Self Med</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -22,15 +22,15 @@
                 </div>
             </div>
             <nav class="nav-menu">
-                <a href="index.html" class="nav-link">
+                <a href="index.php" class="nav-link">
                     <i class="fas fa-home"></i>
                     <span>Início</span>
                 </a>
-                <a href="consulta.html" class="nav-link">
+                <a href="consulta.php" class="nav-link">
                     <i class="fas fa-stethoscope"></i>
                     <span>Consulta</span>
                 </a>
-                <a href="historico.html" class="nav-link active">
+                <a href="historico.php" class="nav-link active">
                     <i class="fas fa-history"></i>
                     <span>Histórico</span>
                 </a>
@@ -45,15 +45,15 @@
                                 <i class="fas fa-user"></i>
                             </div>
                             <span class="profile-name" id="profile-name">Usuário</span>
-                            <i class="fas fa-chevron-down"></i>
+                            <a href="perfilView.php"><i class="fas fa-chevron-down" class="fas fa-chevron-down"></i></a>
                         </button>
                         
                         <div class="profile-menu" id="profile-menu">
-                            <a href="perfil.html" class="profile-menu-item">
+                            <a href="perfil.php" class="profile-menu-item">
                                 <i class="fas fa-user-circle"></i>
                                 Meu Perfil
                             </a>
-                            <a href="historico.html" class="profile-menu-item active">
+                            <a href="historico.php" class="profile-menu-item active">
                                 <i class="fas fa-history"></i>
                                 Histórico
                             </a>
@@ -125,32 +125,27 @@
                 </div>
             </div>
 
-            <!-- Consultations List -->
             <div class="consultations-container">
                 <div class="consultations-header">
                     <h2>Suas Consultas</h2>
-                    <a href="consulta.html" class="btn-new-consultation">
+                    <a href="consulta.php" class="btn-new-consultation">
                         <i class="fas fa-plus"></i>
                         Nova Consulta
                     </a>
                 </div>
 
                 <div class="consultations-list" id="consultations-list">
-                    <!-- Consultation items will be loaded here -->
                 </div>
 
-                <!-- Loading State -->
                 <div class="loading-state" id="loading-state">
                     <i class="fas fa-spinner fa-spin"></i>
                     <p>Carregando histórico...</p>
                 </div>
-
-                <!-- Empty State -->
                 <div class="empty-state" id="empty-state" style="display: none;">
                     <i class="fas fa-clipboard-list"></i>
                     <h3>Nenhuma consulta encontrada</h3>
                     <p>Você ainda não fez nenhuma consulta ou não há resultados para os filtros aplicados.</p>
-                    <a href="consulta.html" class="btn-primary">
+                    <a href="consulta.php" class="btn-primary">
                         <i class="fas fa-stethoscope"></i>
                         Fazer Primeira Consulta
                     </a>
@@ -159,7 +154,6 @@
         </div>
     </main>
 
-    <!-- Consultation Detail Modal -->
     <div class="modal" id="consultationModal">
         <div class="modal-content large">
             <div class="modal-header">
@@ -169,12 +163,10 @@
                 </button>
             </div>
             <div class="consultation-detail" id="consultation-detail">
-                <!-- Consultation details will be loaded here -->
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -194,10 +186,10 @@
                 <div class="footer-section">
                     <h4>Navegação</h4>
                     <ul class="footer-links">
-                        <li><a href="index.html">Início</a></li>
-                        <li><a href="consulta.html">Consulta IA</a></li>
-                        <li><a href="perfil.html">Perfil</a></li>
-                        <li><a href="historico.html">Histórico</a></li>
+                        <li><a href="index.php">Início</a></li>
+                        <li><a href="consulta.php">Consulta IA</a></li>
+                        <li><a href="perfilView.php">Perfil</a></li>
+                        <li><a href="historico.php">Histórico</a></li>
                     </ul>
                 </div>
                 
