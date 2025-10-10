@@ -31,11 +31,6 @@ include("../controller/perfil.php");
             <div class="auth-section">
                 <div class="user-profile" id="user-profile">
                     <div class="profile-dropdown">
-                        <button class="profile-btn" onclick="toggleProfileMenu()">
-                            <div class="profile-avatar"><i class="fas fa-user"></i></div>
-                            <span class="profile-name" id="profile-name"><?php echo htmlspecialchars($user['nome']); ?></span>
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
                         <div class="profile-menu" id="profile-menu">
                             <a href="perfil.php" class="profile-menu-item active"><i class="fas fa-user-circle"></i>Meu Perfil</a>
                             <a href="historico.html" class="profile-menu-item"><i class="fas fa-history"></i>Histórico</a>
@@ -65,10 +60,12 @@ include("../controller/perfil.php");
                         <h3 id="sidebar-name"><?php echo htmlspecialchars($user['nome']) . ' ' . htmlspecialchars($user['sobrenome']); ?></h3>
                         <p id="sidebar-email"><?php echo htmlspecialchars($user['email']); ?></p>
                         <div class="profile-stats">
-                            <div class="stat">
-                                <span class="stat-number" id="total-consultations">0</span>
-                                <span class="stat-label">Consultas</span>
-                            </div>
+                                <div class="stat">
+                                    <span class="stat-label">Consultas</span>
+                                    <span class="stat-number" id="total-consultations">
+                                        <?php echo htmlspecialchars($total_consultas); ?>
+                                    </span>
+                                </div>  
                             <div class="stat">
                                 <span class="stat-label">Membro desde</span>
                                 <span class="stat-number" id="member-since"><?php echo date('d/m/Y', strtotime($user['data_cadastro'])); ?></span>

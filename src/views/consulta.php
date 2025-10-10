@@ -2,7 +2,6 @@
 session_start();
 $isLoggedIn = isset($_SESSION['id']);
 $userName = '';
-$mensagem = '';
 
 if ($isLoggedIn) {
     include("../controller/conexao.php");
@@ -18,28 +17,6 @@ if ($isLoggedIn) {
         $userName = $user['nome'];
     }
     $stmt->close();
-    
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $sintomas = $_POST['sintomas'] ?? '';
-        $duracao = $_POST['duracao-sintomas'] ?? '';
-        $intensidade = $_POST['intensidade'] ?? '';
-
-        if (!empty($sintomas) && !empty($duracao) && !empty($intensidade)) {
-            $stmt_insert = $connection->prepare("INSERT INTO consultas (id_usuario, sintomas, duracao_sintomas, intensidade) VALUES (?, ?, ?, ?)");
-            $stmt_insert->bind_param("issi", $userId, $sintomas, $duracao, $intensidade);
-            
-            if ($stmt_insert->execute()) {
-                $mensagem = "<p style='color: green; text-align:center;'>✅ Consulta registrada com sucesso!</p> ";
-            } else {
-                $mensagem = "<p style='color: red; text-align:center;'>❌ Erro ao salvar a consulta.</p>";
-            }
-
-            $stmt_insert->close();
-        } else {
-            $mensagem = "<p style='color: orange; text-align:center;'>⚠️ Preencha todos os campos antes de enviar.</p>";
-        }
-    }
-
     $connection->close();
 }
 ?>
@@ -55,7 +32,6 @@ if ($isLoggedIn) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="nav-brand">
@@ -76,7 +52,7 @@ if ($isLoggedIn) {
                     <i class="fas fa-stethoscope"></i>
                     <span>Consulta</span>
                 </a>
-                <a href="index.php #about" class="nav-link">
+                <a href="index.php#about" class="nav-link">
                     <i class="fas fa-info-circle"></i>
                     <span>Sobre</span>
                 </a>
@@ -97,20 +73,20 @@ if ($isLoggedIn) {
                 <?php else: ?>
                 <div class="user-profile" id="user-profile">
                     <div class="profile-dropdown">
-                        <button class="profile-btn" onclick="toggleProfileMenu()">
+                        <a href="perfilView.php" id="Perfil-icone"><button class="profile-btn" onclick="toggleProfileMenu()">
                             <div class="profile-avatar">
                                 <i class="fas fa-user"></i>
                             </div>
                             <span class="profile-name" id="profile-name"><?php echo htmlspecialchars($userName); ?></span>
-                            <a href="perfilView.php"><i class="fas fa-chevron-down" class="fas fa-chevron-down"></i></a>
-                        </button>
+                            <i class="fas fa-chevron-down" id="Perfil-icone"></i>
+                        </button></a>
 
                         <div class="profile-menu" id="profile-menu">
                             <a href="perfil.php" class="profile-menu-item">
                                 <i class="fas fa-user-circle"></i>
                                 Meu Perfil
                             </a>
-                            <a href="historico.html" class="profile-menu-item">
+                            <a href="historico.php" class="profile-menu-item">
                                 <i class="fas fa-history"></i>
                                 Histórico
                             </a>
@@ -130,6 +106,26 @@ if ($isLoggedIn) {
             </div>
         </div>
     </header>
+
+    <?php if (!$isLoggedIn): ?>
+    <!-- Mensagem para usuários não logados -->
+    <main class="consultation-page">
+        <div class="container">
+            <div class="login-required-message">
+                <div class="message-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h2>Acesso Restrito</h2>
+                <p>Você precisa estar logado para usar a consulta com IA.</p>
+                <button class="btn-primary" onclick="window.location.href='index.php'">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Fazer Login
+                </button>
+            </div>
+        </div>
+    </main>
+    <?php else: ?>
+    <!-- Página de Consulta -->
     <main class="consultation-page">
         <div class="container">
             <div class="page-header">
@@ -147,6 +143,7 @@ if ($isLoggedIn) {
                     <p>Esta ferramenta oferece <strong>orientações iniciais</strong> baseadas em inteligência artificial. <strong>NÃO substitui</strong> consulta médica profissional, diagnóstico ou tratamento. Em emergências, procure atendimento médico imediatamente.</p>
                 </div>
             </div>
+
             <div class="consultation-container">
                 <div class="consultation-card">
                     <div class="card-header">
@@ -154,11 +151,16 @@ if ($isLoggedIn) {
                         <p>Conte-nos como você está se sentindo</p>
                     </div>
 
-                    <form id="consultation-form" class="consultation-form" method="post">
+                    <form id="consultation-form" class="consultation-form">
                         <div class="form-group">
                             <label for="symptoms">Descreva seus sintomas:</label>
                             <textarea 
-                                id="symptoms" name="sintomas"rows="6"required></textarea>
+                                id="symptoms" 
+                                name="sintomas" 
+                                rows="6" 
+                                maxlength="1000"
+                                placeholder="Exemplo: Estou com dor de cabeça intensa, febre e cansaço..."
+                                required></textarea>
                             <div class="char-counter">
                                 <span id="char-count">0</span>/1000 caracteres
                             </div>
@@ -189,27 +191,39 @@ if ($isLoggedIn) {
                         </div>
 
                         <button type="submit" class="btn-submit" id="submit-btn">
-                            <i class="fas fa-paper-plane"></i>
-                            <span class="btn-text">Enviar para Análise</span>
+                            <span class="btn-text">
+                                <i class="fas fa-paper-plane"></i>
+                                Enviar para Análise
+                            </span>
                             <div class="loading-spinner" style="display: none;">
                                 <i class="fas fa-spinner fa-spin"></i>
+                                Processando com IA...
                             </div>
                         </button>
                     </form>
+
+                    <!-- Seção de Resultados -->
                     <div id="results-section" class="results-section" style="display: none;">
                         <div class="results-header">
                             <h3><i class="fas fa-clipboard-list"></i> Análise Recebida</h3>
                         </div>
                         <div id="analysis-results" class="analysis-results">
+                            <!-- Conteúdo será inserido dinamicamente -->
                         </div>
                         <div class="results-actions">
                             <button type="button" class="btn-secondary" onclick="startNewConsultation()">
                                 <i class="fas fa-redo"></i>
                                 Nova Consulta
                             </button>
+                            <button type="button" class="btn-primary" onclick="window.location.href='historico.php'">
+                                <i class="fas fa-history"></i>
+                                Ver Histórico
+                            </button>
                         </div>
                     </div>
                 </div>
+
+                <!-- Sidebar com Informações -->
                 <div class="side-info">
                     <div class="info-card">
                         <h3><i class="fas fa-lightbulb"></i> Dicas para uma melhor análise</h3>
@@ -236,10 +250,17 @@ if ($isLoggedIn) {
                             <strong>Emergência: 192 (SAMU)</strong>
                         </div>
                     </div>
+
+                    <div class="info-card ai-info">
+                        <h3><i class="fas fa-robot"></i> Sobre a IA</h3>
+                        <p>Utilizamos o modelo <strong>Llama 3.3 70B</strong> da Groq, treinado para fornecer orientações médicas preliminares baseadas em grandes volumes de dados médicos.</p>
+                        <p class="small-text">Lembre-se: a IA é uma ferramenta de apoio, não um substituto para profissionais de saúde.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
+    <?php endif; ?>
 
     <!-- Footer -->
     <footer class="footer">
@@ -269,7 +290,7 @@ if ($isLoggedIn) {
                     <ul class="footer-links">
                         <li><a href="index.php">Início</a></li>
                         <li><a href="consulta.php">Consulta IA</a></li>
-                        <li><a href="index.php #about">Sobre Nós</a></li>
+                        <li><a href="index.php#about">Sobre Nós</a></li>
                         <li><a href="index.php#how-it-works">Como Funciona</a></li>
                     </ul>
                 </div>
@@ -302,7 +323,7 @@ if ($isLoggedIn) {
         </div>
     </footer>
 
-    <script src="../js/script.js"></script>
-    <script src="../js/consulta.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/consulta.js"></script>
 </body>
 </html>

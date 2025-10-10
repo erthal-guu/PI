@@ -76,13 +76,13 @@ if ($isLoggedIn) {
                 <?php else: ?>
                 <div class="user-profile" id="user-profile">
                     <div class="profile-dropdown">
-                        <button class="profile-btn" onclick="toggleProfileMenu()">
+                        <a href="perfilView.php" id="Perfil-icone""><button class="profile-btn" onclick="toggleProfileMenu()">
                             <div class="profile-avatar">
                                 <i class="fas fa-user"></i>
                             </div>
                             <span class="profile-name" id="profile-name"><?php echo htmlspecialchars($userName); ?></span>
-                            <a href="perfilView.php"><i class="fas fa-chevron-down" class="fas fa-chevron-down"></i></a>
-                        </button>
+                            <i class="fas fa-chevron-down" id="Perfil-icone"></i>
+                        </button></a>
 
                         <div class="profile-menu" id="profile-menu">
                             <a href="perfil.php"class="profile-menu-item">
