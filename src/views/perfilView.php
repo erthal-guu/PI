@@ -201,3 +201,4 @@ include("../controller/perfil.php");
     <script src="profile.js"></script>
 </body>
 </html>
+<!-- PerfilView atulizado -->

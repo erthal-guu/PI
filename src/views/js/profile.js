@@ -70,3 +70,5 @@ function togglePassword(inputId) {
         icon.classList.add('fa-eye');
     }
 }
+
+//profile.js atualizado

@@ -59,7 +59,7 @@ $duracaoTexto = [
     'mais-2-semanas' => 'mais de 2 semanas'
 ];
 
-$prompt = "Você é um assistente médico virtual chamado Self Med AI. Analise os seguintes sintomas e forneça orientações iniciais em português do Brasil.
+$prompt = "Você é um assistente médico virtual Profissional chamado Self Med AI. Analise os seguintes sintomas e forneça orientações iniciais em português do Brasil.
 
 **IMPORTANTE**: 
 - Suas respostas são apenas orientações preliminares
