@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email'])) {
     $stmt_check->store_result();
 
     if ($stmt_check->num_rows > 0) {
-        header("Location: ../views/html/index.html?emailExists=1");
+        header("Location: ../views/html/index.php?emailExists=1");
         exit();
     }
     $stmt_check->close();

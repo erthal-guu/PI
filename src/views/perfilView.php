@@ -32,7 +32,7 @@ include("../controller/perfil.php");
                     <i class="fas fa-stethoscope"></i>
                     <span>Consulta</span>
                 </a>
-                <a href="perfil.php" class="nav-link active" style="color: white;">
+                <a href="" class="nav-link active" style="color: white;">
                     <i class="fas fa-user"></i>
                     <span>Perfil</span>
                 </a>
