@@ -341,14 +341,6 @@ function formatarResposta($texto) {
                                 <h4><i class="fas fa-notes-medical"></i> Sintomas Relatados:</h4>
                                 <p><?php echo htmlspecialchars($consulta['sintomas_resumo']); ?></p>
                             </div>
-                            
-                            <div class="consultation-footer">
-                                <a href="detalhes_consulta.php?id=<?php echo $consulta['id']; ?>" class="btn-view-details">
-                                    <i class="fas fa-eye"></i>
-                                    Ver Análise Completa
-                                </a>
-                            </div>
-                        </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
